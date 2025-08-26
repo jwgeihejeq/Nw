@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Grup Prakarya — Landing Modern</title>
+  <meta name="description" content="Landing page modern untuk Grup Prakarya. Gabung, lihat workshop, lihat proyek, dan berinteraksi dengan komunitas." />
+  <!-- Font: Inter + Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#071026;
+      --card:#0b1220;
+      --muted:#9fb0c8;
+      --glass: rgba(255,255,255,0.035);
+      --accent-a:#06b6d4; /* teal */
+      --accent-b:#7c3aed; /* purple */
+      --radius:14px;
+      --glass-strong: rgba(255,255,255,0.06);
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; min-height:100vh; background:radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent), linear-gradient(180deg,#051022 0%, #071026 60%); color:#e9f2fb; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      padding:28px; display:flex; align-items:flex-start; justify-content:center;
+    }
+
+    .wrap{width:100%; max-width:1180px}
+
+    /* Top nav */
+    nav{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:52px; height:52px; border-radius:12px; display:grid; place-items:center; font-weight:800; background:linear-gradient(135deg,var(--accent-b),var(--accent-a)); box-shadow:0 8px 30px rgba(7,10,20,0.6)}
+    .brand h1{font-size:16px; margin:0}
+    .nav-right{display:flex; gap:10px; align-items:center}
+    .search{background:var(--card); border-radius:999px; padding:8px 12px; display:flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,0.02)}
+    .search input{background:transparent; border:0; outline:0; color:var(--muted); width:220px}
+
+    .toggle{cursor:pointer; border-radius:999px; padding:8px; border:1px solid rgba(255,255,255,0.03); background:var(--glass);}
+
+    /* Layout */
+    .grid{display:grid; grid-template-columns:1fr 420px; gap:22px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+    /* Hero */
+    .hero{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:28px; border-radius:18px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 12px 40px rgba(4,9,20,0.6)}
+    .hero-head{display:flex; gap:20px; align-items:center}
+    .hero-text h2{font-size:34px; margin:0 0 8px; font-weight:800}
+    .hero-text p{margin:0 0 16px; color:var(--muted); max-width:680px}
+
+    .cta{display:flex; gap:12px; align-items:center}
+    .btn{cursor:pointer; border:0; padding:12px 16px; border-radius:12px; font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b)); color:white; box-shadow:0 12px 40px rgba(124,58,237,0.12);}
+    .btn-ghost{background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.03)}
+
+    .hero-stats{display:flex; gap:12px; margin-top:18px}
+    .stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:12px 14px; border-radius:12px; min-width:140px}
+    .stat strong{display:block; font-size:18px}
+
+    /* Right card */
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px; border-radius:18px; border:1px solid rgba(255,255,255,0.03); position:sticky; top:28px}
+    .card .cover{height:160px; border-radius:12px; background:linear-gradient(135deg,var(--accent-b),var(--accent-a)); display:grid; place-items:center; font-weight:800; font-size:20px; color:white}
+    .card .meta{margin-top:12px}
+    .card .meta p{color:var(--muted); margin:4px 0}
+
+    .actions{display:flex; gap:10px; margin-top:12px}
+
+    /* Sections */
+    .section{margin-top:20px; padding:18px; border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02)}
+    .features-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+    @media (max-width:720px){.features-grid{grid-template-columns:repeat(1,1fr)}}
+    .feature-card{padding:14px; border-radius:12px; background:var(--glass);}
+
+    /* Workshop cards */
+    .workshops{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+    @media (max-width:720px){.workshops{grid-template-columns:1fr}}
+    .workshop{padding:12px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent)}
+
+    /* Gallery */
+    .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+    @media (max-width:900px){.gallery{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:480px){.gallery{grid-template-columns:1fr}}
+    .thumb{height:120px; border-radius:10px; overflow:hidden; background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); display:grid; place-items:center}
+
+    /* Testimonials */
+    .testimonials{display:flex; gap:12px; overflow:hidden; align-items:center}
+    .testimonial{min-width:260px; padding:12px; border-radius:12px; background:var(--glass);}
+
+    /* Lightbox */
+    .overlay{position:fixed; inset:0; display:none; background:rgba(1,3,9,0.6); align-items:center; justify-content:center; z-index:60}
+    .overlay.show{display:flex}
+    .lightbox{max-width:920px; width:90%; border-radius:12px; overflow:hidden}
+    .lightbox img{width:100%; display:block}
+
+    /* Modal form */
+    .modal{background:linear-gradient(180deg,#071226,#04101b); padding:18px; border-radius:12px; width:100%; max-width:640px}
+    .form-row{display:flex; gap:10px}
+    .form-row .field{flex:1}
+    input, textarea{width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); background:transparent; color:var(--muted);}
+    label{font-size:13px; color:var(--muted)}
+
+    .toast{position:fixed; right:20px; bottom:20px; background:linear-gradient(90deg,var(--accent-b),var(--accent-a)); color:white; padding:12px 14px; border-radius:12px; box-shadow:0 10px 40px rgba(2,6,23,0.5); transform:translateY(20px); opacity:0; transition:all .36s ease; z-index:80}
+    .toast.show{opacity:1; transform:translateY(0)}
+
+    footer{color:var(--muted); font-size:13px; margin-top:18px}
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    a{color:inherit}
+
+    /* accessibility focus */
+    :focus{outline:2px dashed rgba(106,58,183,0.4); outline-offset:3px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div class="brand">
+        <div class="logo" aria-hidden>PRK</div>
+        <div>
+          <h1>Grup Prakarya</h1>
+          <div class="muted" style="font-size:13px">Komunitas kreatif — berbagi & praktik</div>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input aria-label="Cari proyek atau topik" placeholder="Cari proyek, workshop, atau topik..." id="searchInput">
+        </div>
+        <button class="toggle" id="themeToggle" aria-pressed="false" title="Toggle tema gelap/terang">🌙</button>
+        <button class="toggle" id="quickJoin" title="Gabung cepat">🚀</button>
+      </div>
+    </nav>
+
+    <div class="grid">
+      <main>
+        <section class="hero">
+          <div class="hero-head">
+            <div style="flex:1">
+              <div class="hero-text">
+                <h2>Berkreasi. Belajar. Berbagi.<br><span style="color:var(--accent-a)">Grup Prakarya</span> — tempat ide jadi nyata</h2>
+                <p>Gabung bersama pelajar, guru, dan maker. Template proyek, panduan video, sesi live mentoring, tantangan mingguan, dan kolaborasi tim.</p>
+              </div>
+
+              <div class="cta">
+                <button class="btn btn-primary" id="btnJoinHero">Gabung via WhatsApp</button>
+                <button class="btn btn-ghost" id="btnCopyInvite">Salin undangan</button>
+                <button class="btn btn-ghost" id="btnRules">Lihat aturan</button>
+              </div>
+
+              <div class="hero-stats" aria-hidden>
+                <div class="stat"><span class="muted">👥 Anggota</span><strong id="cntMembers">1,204</strong></div>
+                <div class="stat"><span class="muted">🧰 Proyek</span><strong id="cntProjects">482</strong></div>
+                <div class="stat"><span class="muted">🔥 Aktif hari ini</span><strong id="cntActive">124</strong></div>
+              </div>
+            </div>
+
+            <aside class="card" aria-label="Informasi grup">
+              <div class="cover">Grup Prakarya</div>
+              <div class="meta">
+                <p class="muted">SMA / UMUM • Belajar & berbagi</p>
+                <p class="muted">Moderator: <strong>AdminPrakarya</strong></p>
+
+                <div class="actions">
+                  <button class="btn btn-primary" id="btnJoinCard">Gabung</button>
+                  <button class="btn btn-ghost" id="btnContact">Hubungi Admin</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Features -->
+        <section class="section">
+          <h3 style="margin:0 0 12px">Apa yang ada di Grup</h3>
+          <div class="features-grid">
+            <div class="feature-card">
+              <strong>Workshop interaktif</strong>
+              <div class="muted">Sesi praktis setiap bulan—bawa alat sederhana & buat proyek nyata.</div>
+            </div>
+            <div class="feature-card">
+              <strong>Template & bahan</strong>
+              <div class="muted">Template proyek, daftar bahan, file cetak, dan tutorial ringkas.</div>
+            </div>
+            <div class="feature-card">
+              <strong>Kompetisi mini</strong>
+              <div class="muted">Tantangan rutin dengan hadiah virtual dan sertifikat.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Workshops -->
+        <section class="section" style="margin-top:14px">
+          <h3 style="margin:0 0 12px">Workshop Mendatang</h3>
+          <div class="workshops">
+            <div class="workshop">
+              <strong>Kerajinan Daur Ulang — Kertas Menjadi Dompet</strong>
+              <div class="muted">Sabtu, 6 Sep 2025 • 14:00 WIB</div>
+              <div style="margin-top:8px; display:flex; gap:8px"><button class="btn btn-primary" data-workshop="daur">Daftar</button><button class="btn btn-ghost">Detail</button></div>
+            </div>
+            <div class="workshop">
+              <strong>Elektronika Sederhana — Lampu Sentuh</strong>
+              <div class="muted">Minggu, 14 Sep 2025 • 10:00 WIB</div>
+              <div style="margin-top:8px; display:flex; gap:8px"><button class="btn btn-primary" data-workshop="touch">Daftar</button><button class="btn btn-ghost">Detail</button></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="section">
+          <h3 style="margin:0 0 12px">Galeri Proyek</h3>
+          <div class="gallery" id="gallery">
+            <!-- Placeholder thumbnails; ganti data-src dengan URL gambar proyek nyata -->
+            <div class="thumb" role="button" tabindex="0" data-src="" aria-label="Proyek: Dompet Kertas">🎨 Dompet Kertas</div>
+            <div class="thumb" role="button" tabindex="0" data-src="" aria-label="Proyek: Lampu Sentuh">💡 Lampu Sentuh</div>
+            <div class="thumb" role="button" tabindex="0" data-src="" aria-label="Proyek: Mini Planter">🌱 Mini Planter</div>
+            <div class="thumb" role="button" tabindex="0" data-src="" aria-label="Proyek: Poster Kolase">🖼️ Poster Kolase</div>
+            <div class="thumb" role="button" tabindex="0" data-src="" aria-label="Proyek: Tas Daur Ulang">🧵 Tas Daur Ulang</div>
+            <div class="thumb" role="button" tabindex="0" data-src="" aria-label="Proyek: Robot Sederhana">🤖 Robot Sederhana</div>
+          </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="section" style="margin-top:14px">
+          <h3 style="margin:0 0 12px">Dari anggota kami</h3>
+          <div class="testimonials" id="testimonials" aria-live="polite">
+            <div class="testimonial">"Workshopnya seru, saya langsung bikin project!" — <strong>Alya</strong></div>
+            <div class="testimonial">"Banyak template yang gampang diikuti." — <strong>Rikil</strong></div>
+            <div class="testimonial">"Admin cepat bantu kalau ada masalah bahan." — <strong>Siti</strong></div>
+          </div>
+        </section>
+
+        <footer>
+          <div style="display:flex; justify-content:space-between; gap:12px; align-items:center">
+            <div class="muted">© 2025 Grup Prakarya • Buat oleh komunitas</div>
+            <div class="muted">Butuh fitur khusus? <a href="#" id="contactSuggestion">Hubungi kami</a></div>
+          </div>
+        </footer>
+      </main>
+
+      <!-- Right column: quick panel -->
+      <aside>
+        <div class="section card">
+          <h4 style="margin:0 0 8px">Gabung Sekarang</h4>
+          <p class="muted">Isi sedikit info sebelum gabung untuk memudahkan admin verifikasi (opsional).</p>
+          <div style="margin-top:10px">
+            <button class="btn btn-primary" id="openJoinModal">Isi & Gabung</button>
+            <button class="btn btn-ghost" id="openQuickJoin">Gabung Langsung</button>
+          </div>
+        </div>
+
+        <div class="section" style="margin-top:12px">
+          <h4 style="margin:0 0 8px">Leaderboard</h4>
+          <ol style="margin:0 0 0 18px; padding:0">
+            <li class="muted">Alya — 42 poin</li>
+            <li class="muted">Riki — 37 poin</li>
+            <li class="muted">Siti — 30 poin</li>
+          </ol>
+        </div>
+
+        <div class="section" style="margin-top:12px">
+          <h4 style="margin:0 0 8px">Quick tips</h4>
+          <ul style="margin:0; padding-left:18px" class="muted">
+            <li>Gunakan tag #tutorial untuk panduan.</li>
+            <li>Kirim foto progress di thread proyek.</li>
+            <li>Baca aturan sebelum posting.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Overlay / Lightbox -->
+  <div class="overlay" id="overlay" role="dialog" aria-hidden="true">
+    <div class="lightbox" role="document">
+      <img id="overlayImg" alt="Preview proyek" src="" />
+    </div>
+  </div>
+
+  <!-- Join Modal -->
+  <div class="overlay" id="joinModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3>Form Gabung — Grup Prakarya</h3>
+      <p class="muted">Isi nama (opsional) agar admin lebih mudah memverifikasi.</p>
+      <div style="margin-top:12px">
+        <div class="form-row" style="margin-bottom:10px">
+          <div class="field">
+            <label for="name">Nama</label>
+            <input id="name" placeholder="Nama kamu (contoh: Siti)" />
+          </div>
+          <div class="field">
+            <label for="school">Sekolah / Komunitas</label>
+            <input id="school" placeholder="SMA Negeri 1 Contoh" />
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <label for="reason">Kenapa ingin gabung? (opsional)</label>
+          <textarea id="reason" rows="3" placeholder="Contoh: belajar daur ulang, ikut workshop..." ></textarea>
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px">
+          <button class="btn btn-ghost" id="modalClose">Batal</button>
+          <button class="btn btn-primary" id="modalSubmit">Kirim & Gabung</button>
+        </div>
+
+        <div style="margin-top:8px; font-size:13px; color:var(--muted)">Catatan: data disimpan secara lokal di perangkat untuk mempercepat pengisian berikutnya.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Tersimpan</div>
+
+  <script>
+    // === CONFIG: ganti dengan link invite WhatsApp milikmu ===
+    const WHATSAPP_INVITE = 'https://wa.me/6281234567890?text=Halo%20Admin%2C%20saya%20ingin%20bergabung%20di%20Grup%20Prakarya!';
+
+    // Helpers
+    const $ = (id) => document.getElementById(id);
+    const toast = $('toast');
+    function showToast(text, t = 2300){ toast.textContent = text; toast.classList.add('show'); clearTimeout(window._t); window._t = setTimeout(()=> toast.classList.remove('show'), t); }
+
+    // Copy invite
+    document.getElementById('btnCopyInvite').addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(WHATSAPP_INVITE); showToast('Link undangan tersalin!'); }
+      catch(e){ showToast('Gagal menyalin — salin manual dari konsol'); console.log('Invite:', WHATSAPP_INVITE); }
+    });
+
+    // Open join
+    function openWhatsAppWithPreview(name, school, reason){
+      const lines = [];
+      if(name) lines.push('Nama: ' + name);
+      if(school) lines.push('Sekolah/Komunitas: ' + school);
+      if(reason) lines.push('Alasan: ' + reason);
+      const message = encodeURIComponent((lines.join('
+') + '
+Saya ingin gabung ke Grup Prakarya.').trim());
+      const link = WHATSAPP_INVITE.split('?')[0] + '?text=' + message;
+      window.open(link, '_blank');
+    }
+
+    // Modal logic
+    const joinModal = $('joinModal');
+    const overlay = $('overlay');
+    function showModal(){ joinModal.classList.add('show'); joinModal.setAttribute('aria-hidden','false'); }
+    function hideModal(){ joinModal.classList.remove('show'); joinModal.setAttribute('aria-hidden','true'); }
+
+    document.getElementById('openJoinModal').addEventListener('click', ()=>{ showModal(); loadSaved(); });
+    document.getElementById('modalClose').addEventListener('click', ()=> hideModal());
+
+    document.getElementById('modalSubmit').addEventListener('click', ()=>{
+      const name = $('name').value.trim();
+      const school = $('school').value.trim();
+      const reason = $('reason').value.trim();
+      // save locally
+      try{ localStorage.setItem('prk_name', name); localStorage.setItem('prk_school', school); }
+      catch(e){}
+      showToast('Terima kasih! Membuka WhatsApp...');
+      setTimeout(()=> openWhatsAppWithPreview(name, school, reason), 700);
+      hideModal();
+    });
+
+    // Quick join (langsung buka link)
+    document.getElementById('openQuickJoin').addEventListener('click', ()=>{ window.open(WHATSAPP_INVITE, '_blank'); showToast('Membuka WhatsApp...'); });
+    document.getElementById('btnJoinHero').addEventListener('click', ()=>{ window.open(WHATSAPP_INVITE, '_blank'); showToast('Membuka WhatsApp...'); });
+    document.getElementById('btnJoinCard').addEventListener('click', ()=>{ window.open(WHATSAPP_INVITE, '_blank'); showToast('Membuka WhatsApp...'); });
+
+    function loadSaved(){ try{ const n = localStorage.getItem('prk_name'); const s = localStorage.getItem('prk_school'); if(n) $('name').value = n; if(s) $('school').value = s; }catch(e){}
+    }
+
+    // Lightbox for gallery (thumbnails currently placeholders)
+    document.querySelectorAll('.thumb').forEach(t => {
+      t.addEventListener('click', ()=> openLightbox(t));
+      t.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') openLightbox(t); });
+    });
+    function openLightbox(el){ const src = el.getAttribute('data-src'); const img = $('overlayImg'); if(src){ img.src = src; } else { img.src = ''; img.alt = el.getAttribute('aria-label') || 'Preview proyek'; }
+      overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+    }
+    overlay.addEventListener('click', ()=> overlay.classList.remove('show'));
+
+    // Testimonials autoplay
+    (function rotateTestimonials(){
+      const container = $('testimonials');
+      let idx = 0;
+      setInterval(()=>{
+        idx = (idx + 1) % container.children.length;
+        container.scrollTo({ left: container.children[idx].offsetLeft - container.offsetLeft, behavior: 'smooth' });
+      }, 3500);
+    })();
+
+    // Counters animation (members/projects/active) — sample animation
+    (function animateCounters(){
+      const members = $('cntMembers'); const projects = $('cntProjects'); const active = $('cntActive');
+      const targetM = parseInt(members.textContent.replace(/,/g,'')) || 1204;
+      const targetP = parseInt(projects.textContent.replace(/,/g,'')) || 482;
+      const targetA = parseInt(active.textContent.replace(/,/g,'')) || 124;
+      let sM = Math.floor(targetM * 0.6), sP = Math.floor(targetP * 0.6), sA = Math.floor(targetA * 0.6);
+      const step = ()=>{
+        if(sM < targetM) sM += Math.ceil((targetM - sM) / 12);
+        if(sP < targetP) sP += Math.ceil((targetP - sP) / 12);
+        if(sA < targetA) sA += Math.ceil((targetA - sA) / 12);
+        members.textContent = sM.toLocaleString('en-US'); projects.textContent = sP.toLocaleString('en-US'); active.textContent = sA.toLocaleString('en-US');
+        if(sM < targetM || sP < targetP || sA < targetA) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    })();
+
+    // Theme toggle (dark/light) — simple
+    const themeToggle = $('themeToggle');
+    function setTheme(mode){ if(mode === 'light'){ document.documentElement.style.setProperty('--bg','#f6f8fb'); document.body.style.background = '#f6f8fb'; themeToggle.textContent = '☀️'; themeToggle.setAttribute('aria-pressed','true'); }
+      else { document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent), linear-gradient(180deg,#051022 0%, #071026 60%)'; themeToggle.textContent = '🌙'; themeToggle.setAttribute('aria-pressed','false'); }
+      try{ localStorage.setItem('prk_theme', mode); }catch(e){}
+    }
+    themeToggle.addEventListener('click', ()=>{ const current = localStorage.getItem('prk_theme') || 'dark'; setTheme(current === 'dark' ? 'light' : 'dark'); });
+    // init theme
+    setTheme(localStorage.getItem('prk_theme') || 'dark');
+
+    // Quick join button — fun small surprise if Shift held
+    document.getElementById('quickJoin').addEventListener('click', (e)=>{
+      if(e.shiftKey){ // playful confetti
+        showToast('Surprise! 🎉 Membuka WhatsApp...');
+        // small confetti effect (simple emoji bursts)
+        for(let i=0;i<18;i++){ const s = document.createElement('div'); s.style.position='fixed'; s.style.left=(10+Math.random()*80)+'%'; s.style.top=(10+Math.random()*60)+'%'; s.style.fontSize=(8+Math.random()*28)+'px'; s.style.pointerEvents='none'; s.textContent = ['🎉','✨','🎨','🔥'][Math.floor(Math.random()*4)]; document.body.appendChild(s); setTimeout(()=> s.remove(),1800); }
+        setTimeout(()=> window.open(WHATSAPP_INVITE,'_blank'),800);
+      } else {
+        window.open(WHATSAPP_INVITE,'_blank'); showToast('Membuka WhatsApp...');
+      }
+    });
+
+    // small interactions: workshop buttons -> show toast
+    document.querySelectorAll('[data-workshop]').forEach(b=> b.addEventListener('click', ()=> showToast('Pendaftaran dicatat — cek WhatsApp untuk instruksi')));
+
+    // simple accessibility: close modals with Escape
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ overlay.classList.remove('show'); hideModal(); } });
+
+    // Save suggestion contact click
+    document.getElementById('contactSuggestion').addEventListener('click', (e)=>{ e.preventDefault(); showToast('Fitur kontak akan menyusul — hubungi admin lewat WhatsApp'); window.open(WHATSAPP_INVITE,'_blank'); });
+
+    // Init saved name if present
+    loadSaved();
+
+    // Console note for admin/developer
+    console.log('Edit WHATSAPP_INVITE di bagian atas untuk mengganti nomor/link undangan.');
+  </script>
+</body>
+</html>
