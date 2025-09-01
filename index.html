@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vico Cloud — Mockup (Purchase Flow) v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--blue:#1e88ff;--accent:#0b76ff;--muted:#8f9aa3;--bg:#f6f8fa}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Poppins",system-ui,Roboto,Arial;background:linear-gradient(180deg,#eef6fb 0%, #f6f8fa 100%);color:#102030;min-height:100vh}
+  .topbar{position:sticky;top:0;display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(90deg,#6cc1ff22,#bfe6ff33);border-bottom:1px solid rgba(0,0,0,0.03);z-index:30}
+  .kebab{width:44px;height:44px;border-radius:10px;background:transparent;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .brand{display:flex;align-items:center;gap:10px;flex:1}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#1e88ff,#3fb1ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+  .container{padding:14px;max-width:760px;margin:0 auto}
+  .banner{height:110px;border-radius:14px;background:linear-gradient(90deg,#ff7a7a,#ffb57a);color:white;display:flex;align-items:center;padding:14px;gap:12px;box-shadow:0 8px 30px rgba(255,120,120,0.06)}
+  .notice{margin-top:12px;background:#fff1f1;color:#bf2d2d;padding:14px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+  .big-card{margin-top:16px;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfdff);padding:28px;min-height:220px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(20,40,70,0.03)}
+  .plus-circle{display:flex;align-items:center;flex-direction:column;gap:10px;cursor:pointer;transition:all .25s ease}
+  .plus-circle .circle{width:86px;height:86px;border-radius:999px;background:rgba(11,118,255,0.08);display:flex;align-items:center;justify-content:center}
+  .plus-symbol{width:56px;height:56px;border-radius:999px;background:white;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--accent);box-shadow:0 10px 30px rgba(11,118,255,0.08)}
+  .plus-text{font-weight:600;color:var(--muted)}
+
+  /* Purchased state */
+  .purchased-card .plus-symbol{display:none}
+  .purchased{display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,#f7fbff,#eef8ff);padding:10px;border-radius:12px;box-shadow:0 10px 30px rgba(11,118,255,0.04);cursor:pointer;min-width:220px}
+  .purchased-icon{width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:linear-gradient(135deg,#1e88ff,#3fb1ff);box-shadow:0 8px 24px rgba(30,136,255,0.12)}
+  .purchased-icon svg{width:36px;height:36px;fill:white}
+  .purchased-icon-link{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:12px;cursor:pointer;text-decoration:none;color:inherit}
+  .purchased-info{display:flex;flex-direction:column;gap:4px}
+  .purchased-info .title{font-weight:800}
+  .purchased-info .meta{font-size:13px;color:var(--muted)}
+
+  /* side menu */
+  .overlay{position:fixed;inset:0;z-index:40;display:none}
+  .side{position:fixed;left:0;top:0;bottom:0;width:76%;max-width:340px;background:linear-gradient(180deg,#f6fbff,#eef8ff);box-shadow:8px 0 30px rgba(12,20,40,0.12);transform:translateX(-110%);transition:transform .34s;z-index:50;padding:20px;overflow:auto}
+  .side.open{transform:translateX(0)}
+  .menu-head{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+  .menu-list{border-top:1px solid rgba(0,0,0,0.03);padding-top:12px}
+  .menu-item{display:flex;align-items:center;gap:12px;padding:12px 8px;border-radius:10px;cursor:pointer}
+  .menu-item.active{background:#eefaff}
+  .menu-icon{width:28px;height:28px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+  .small-badge{background:#ffd9d9;color:#b43b3b;padding:3px 6px;border-radius:6px;font-size:11px}
+  .small-badge.blue{background:#d9ecff;color:#0b76ff}
+  .small-badge.green{background:#d8ffe6;color:#0f9d58}
+  .faint{color:var(--muted);font-size:13px}
+
+  /* modal */
+  .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.98);width:94%;max-width:700px;background:white;border-radius:14px;padding:18px;box-shadow:0 30px 60px rgba(3,10,20,0.18);z-index:60;display:none}
+  .modal.open{display:block;animation:pop .16s ease-out}
+  @keyframes pop{from{opacity:0;transform:translate(-50%,-50%) scale(.98)} to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  .tabs{display:flex;gap:8px;margin-bottom:12px}
+  .tab{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(10,30,80,0.06);cursor:pointer;font-weight:600}
+  .tab.active{background:linear-gradient(90deg,#fbfdff,#eefaff);border-color:rgba(11,118,255,0.25);color:var(--accent)}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .pill{border:1px solid rgba(11,76,140,0.06);padding:8px 12px;border-radius:12px;cursor:pointer}
+  .pill.active{background:white;border:1px solid rgba(11,118,255,0.25);box-shadow:0 6px 20px rgba(11,118,255,.06)}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .chip{padding:8px 10px;border-radius:10px;background:#f1f8ff;border:1px solid rgba(11,118,255,0.06);font-size:13px}
+
+  .socials{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .social{padding:8px 12px;border-radius:12px;border:1px solid rgba(12,20,40,0.04);display:flex;gap:8px;align-items:center}
+
+  .buy-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(10,20,40,0.04)}
+  .qty{display:flex;align-items:center;gap:6px;border-radius:8px;padding:6px;background:#fbfcff;border:1px solid rgba(10,20,40,0.03)}
+  .qty button{width:34px;height:34px;border-radius:8px;border:0;background:transparent;font-size:20px;cursor:pointer}
+  .buy-btn{background:var(--accent);color:white;padding:12px 16px;border-radius:12px;border:0;font-weight:700;min-width:160px;cursor:pointer}
+
+  /* little helper */
+  .muted{color:var(--muted);font-size:13px}
+  @media(min-width:760px){.container{padding:22px}.banner{height:140px}.big-card{min-height:260px}}
+
+  /* === Toko Aplikasi (Store) === */
+  .store-panel{display:none;max-width:980px;margin:18px auto;background:linear-gradient(180deg,#fff,#fbfdff);border-radius:14px;border:1px solid rgba(10,20,40,0.04);padding:14px}
+  .store-head{display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;background:linear-gradient(90deg,#eaf5ff,#f4f9ff)}
+  .store-head .appicon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:white;box-shadow:0 6px 18px rgba(10,20,40,0.06)}
+  .store-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+  @media(min-width:720px){.store-grid{grid-template-columns:repeat(3,1fr)}}
+  .app-card{background:#27153a;border-radius:16px;color:white;padding:10px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+  .app-card .badge{position:absolute;left:10px;top:8px;background:#fff;color:#6a2cff;border-radius:10px;padding:4px 8px;font-weight:800;letter-spacing:.5px}
+  .app-img{height:120px;border-radius:12px;background:radial-gradient(circle at 30% 20%, #ffdada 0%, #ffc1d6 35%, #a784ff 80%);display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;color:#fff;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .app-title{font-weight:700;line-height:1.2;min-height:36px}
+  .buy{align-self:flex-start;margin-top:auto;background:#7b2cff;color:white;border:0;border-radius:12px;padding:10px 16px;font-weight:900;text-transform:lowercase;cursor:pointer}
+  .store-close{margin-top:10px;background:white;border:1px solid rgba(10,20,40,.08);border-radius:10px;padding:8px 12px;cursor:pointer}
+
+
+  .img-15{background:radial-gradient(circle at 30% 20%, #ffe9b2 0%, #ffd27a 35%, #a784ff 100%)}
+  .img-14{background:radial-gradient(circle at 30% 20%, #d8e2ff 0%, #a7b7ff 40%, #6446ff 100%)}
+
+
+/* Purchased split layout: cloud service + device card */
+.purchased-wrapper{display:flex;gap:12px;align-items:center}
+@media(max-width:720px){ .purchased-wrapper{flex-direction:column;align-items:stretch} }
+.purchased{background:linear-gradient(180deg,#eaf6ff,#f7fbff);padding:12px;border-radius:12px;display:flex;gap:12px;align-items:center;min-width:260px}
+.purchased-icon{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#2aa4ff,#2a8bff);box-shadow:0 8px 20px rgba(40,120,255,0.12)}
+.purchased-info .title{font-weight:800}
+.device-card{background:white;padding:10px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 20px rgba(10,20,40,0.04)}
+.device-img{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#ffdede,#ffbdbd);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff}
+.device-info .device-title{font-weight:800}
+.device-info .device-meta{color:var(--muted);font-size:13px}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="kebab" id="hamburger" aria-label="open menu">
+    <!-- three vertical dots icon -->
+    <svg width="18" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="5" r="1.8" fill="#123" />
+      <circle cx="12" cy="12" r="1.8" fill="#123" />
+      <circle cx="12" cy="19" r="1.8" fill="#123" />
+    </svg>
+  </button>
+  <div class="brand">
+    <div class="logo">V</div>
+    <div>
+      <div style="font-weight:700">VicoCloud</div>
+      <div class="muted">Cloud • Android</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="icon-btn" title="notif" aria-hidden="true" style="width:40px;height:40px;border-radius:9px;border:0;background:white"></button>
+    <button class="icon-btn" title="more" aria-hidden="true" style="width:40px;height:40px;border-radius:9px;border:0;background:white"></button>
+  </div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+<aside class="side" id="sideMenu" aria-hidden="true">
+  <div class="menu-head">
+    <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,#1e88ff,#3fb1ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700">V</div>
+    <div>
+      <div style="font-weight:800">Vico Cloud</div>
+      <div class="faint">Belum Login</div>
+    </div>
+  </div>
+  <div class="menu-list">
+    <div class="menu-item" id="menuBuyRenew">
+      <div class="menu-icon">➕</div>
+      <div style="flex:1">Beli/Renew</div>
+      <div class="small-badge">Diskon 75%</div>
+    </div>
+
+    <div class="menu-item active">
+      <div class="menu-icon">🏠</div>
+      <div>Beranda</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">🌐</div>
+      <div>Proxy</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">📦</div>
+      <div>Kotak Ajaib Vico</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">🧪</div>
+      <div style="flex:1">Uji perangkat nyata</div>
+      <div class="small-badge">Gratis 10 Menit</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">✅</div>
+      <div>Kode Verifikasi</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">💳</div>
+      <div>Dompet</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">☁️</div>
+      <div>Drive Awan</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">🤖</div>
+      <div style="flex:1">Kreasi AI</div>
+      <div class="small-badge green">New</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">⚙️</div>
+      <div>Operasi Otomatis</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">🔑</div>
+      <div>Kode Aktivasi</div>
+    </div>
+
+    <div class="menu-item" id="menuReferral">
+      <div class="menu-icon">🎁</div>
+      <div>Hadiah Referral</div>
+    </div>
+
+    <div class="menu-item" id="menuStore">
+      <div class="menu-icon">🏬</div>
+      <div>Toko Aplikasi</div>
+    </div>
+  </div>
+</aside>
+
+<main class="container">
+  <div class="banner">
+    <div style="flex:1">
+      <div style="font-weight:800">Invite Friends, Double Rewards</div>
+      <div class="muted">Reward Time + 30% Commission</div>
+    </div>
+    <div style="width:120px;height:90px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center"></div>
+  </div>
+
+  <div class="notice">
+    <div style="font-weight:600">Penawaran waktu terbatas untuk pengguna baru! Pembelian pertama paket apa pun 25% Off (terbatas untuk 1 perangkat)</div>
+    <button class="claim" style="background:var(--accent);color:white;padding:8px 12px;border-radius:18px;border:0">Klaim Sekarang</button>
+  </div>
+
+  <div class="big-card">
+    <div class="plus-circle" id="openBuy" title="Beli">
+      <div class="circle">
+        <div class="plus-symbol" id="plusSymbol">+</div>
+      </div>
+      <div class="plus-text" id="plusText">Beli</div>
+    </div>
+  </div>
+</main>
+
+<!-- ========== STORE PANEL (Toko Aplikasi) ========== -->
+<section class="store-panel" id="storePanel" aria-label="Toko Aplikasi">
+  <div class="store-head">
+    <div class="appicon">🏬</div>
+    <div style="flex:1">
+      <div style="font-weight:800;font-size:18px">Toko Aplikasi</div>
+      <div class="muted">NEW</div>
+    </div>
+    <button class="store-close" id="closeStore">Tutup</button>
+  </div>
+
+  <div class="store-grid" id="storeGrid">
+    <!-- Cards will be injected by JS -->
+  </div>
+</section>
+
+
+
+<!-- Referral panel (hidden by default) -->
+<section id="referralPanel" style="display:none;padding:18px;max-width:900px;margin:22px auto;background:linear-gradient(180deg,#fff,#fbfdff);border-radius:14px;border:1px solid rgba(10,20,40,0.03);box-shadow:0 8px 30px rgba(3,10,20,0.04)">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#ffd27a,#ff9b9b);display:flex;align-items:center;justify-content:center;font-weight:800;color:white">🎁</div>
+      <div>
+        <div style="font-weight:800;font-size:18px">Hadiah Referral</div>
+        <div class="muted" style="margin-top:4px">Anda akan menerima hadiah komisi sebesar 30% untuk distribusi pertama Anda</div>
+      </div>
+    </div>
+    <div>
+      <button id="closeReferral" style="background:#fff;border:1px solid rgba(10,20,40,0.06);padding:8px 12px;border-radius:10px;cursor:pointer">Tutup</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+    <div style="background:linear-gradient(180deg,#e9f5ff,#dff3ff);padding:14px;border-radius:10px">
+      <div style="font-weight:700">Level 1</div>
+      <div class="muted" style="margin-top:6px">Komisi mesin awan:10%, Komisi IP:10%</div>
+    </div>
+    <div style="background:linear-gradient(180deg,#e9f5ff,#dff3ff);padding:14px;border-radius:10px">
+      <div style="font-weight:700">Hadiah waktu</div>
+      <div class="muted" style="margin-top:6px">Waktu yang dapat ditukar: 0 Menit</div>
+    </div>
+    <div style="background:linear-gradient(180deg,#e9f5ff,#dff3ff);padding:14px;border-radius:10px">
+      <div style="font-weight:700">Pembagian keuntungan</div>
+      <div class="muted" style="margin-top:6px">Jumlah yang dapat ditarik: US$0.00</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+    <div style="flex:1;min-width:260px;padding:12px;border-radius:10px;background:#fff;border:1px solid rgba(10,20,40,0.04)">
+      <div class="muted">Jumlah klik</div>
+      <div style="font-weight:700;margin-top:6px">0</div>
+    </div>
+    <div style="flex:1;min-width:260px;padding:12px;border-radius:10px;background:#fff;border:1px solid rgba(10,20,40,0.04)">
+      <div class="muted">Akun yang diundang (s)</div>
+      <div style="font-weight:700;margin-top:6px">0</div>
+    </div>
+    <div style="flex:1;min-width:260px;padding:12px;border-radius:10px;background:#fff;border:1px solid rgba(10,20,40,0.04)">
+      <div class="muted">Jumlah transaksi (US$)</div>
+      <div style="font-weight:700;margin-top:6px">0</div>
+    </div>
+    <div style="flex:1;min-width:260px;padding:12px;border-radius:10px;background:#fff;border:1px solid rgba(10,20,40,0.04)">
+      <div class="muted">Pendapatan diterima (US$)</div>
+      <div style="font-weight:700;margin-top:6px">0</div>
+    </div>
+  </div>
+
+  <div style="margin-top:6px;background:#fbfdff;padding:12px;border-radius:10px;border:1px solid rgba(10,20,40,0.03)">
+    <div style="font-weight:700;margin-bottom:8px">Tautan undangan/kode undangan default</div>
+    <div class="muted">Pengguna yang mendaftar melalui tautan berbagi dan kode undangan dapat menikmati hadiah setelah membeli produk!</div>
+    <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+      <input id="inviteLink" type="text" readonly value="https://www.vicocloud.com/invite/vicoagq2fznt" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(10,20,40,0.06);background:white" />
+      <button id="copyInvite" style="padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer">Salin</button>
+    </div>
+    <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+      <input id="inviteCode" type="text" readonly value="vicoagq2fznt" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(10,20,40,0.06);background:white" />
+      <button id="copyCode" style="padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer">Salin</button>
+    </div>
+  </div>
+
+  <div style="margin-top:12px">
+    <div style="font-weight:700;margin-bottom:8px">Kustomisasi tautan undangan/kode undangan</div>
+    <button id="createCustom" style="padding:10px 12px;border-radius:8px;border:1px solid rgba(10,20,40,0.06);background:white;cursor:pointer">+ membuat</button>
+  </div>
+
+  <div style="margin-top:12px">
+    <div style="font-weight:700;margin-bottom:8px">Bahan rekomendasi</div>
+    <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid rgba(10,20,40,0.04)">
+      <ul style="margin:0;padding-left:18px;color:var(--muted)">
+        <li>Bahan poster promosi</li>
+        <li>Ikon produk</li>
+        <li>Situs web resmi Vico Cloud</li>
+        <li>Komisi Vico Cloud</li>
+        <li>Pengantar Vico Cloud</li>
+        <li>Halaman pendaftaran Vico Cloud</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<section class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Form Pembelian">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="display:flex;flex-direction:column">
+      <div style="font-weight:800">Beli — Vico Cloud</div>
+      <div class="muted">Pilih versi & model lalu lanjutkan pembelian</div>
+    </div>
+    <button id="closeModal" class="icon-btn" title="close" aria-label="close modal" style="width:42px;height:42px;border-radius:10px">
+      ✕
+    </button>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="tabs">
+    <button class="tab active">Beli</button>
+    <button class="tab">Perbarui</button>
+    <button class="tab">Kotak Ajaib Vico</button>
+  </div>
+
+  <div>
+    <div style="font-weight:700">Versi Android</div>
+    <div class="pills" id="androidPills">
+      <div class="pill" data-value="Android 10">Android 10</div>
+      <div class="pill active" data-value="Android 13">Android 13</div>
+      <div class="pill" data-value="Android 14">Android 14</div>
+      <div class="pill" data-value="Android 15">Android 15</div>
+    </div>
+
+    <div style="font-weight:700;margin-top:8px">Model peralatan <span class="muted" style="font-weight:500">* Pilih</span></div>
+    <div class="pills" id="modelEquip">
+      <div class="pill active" data-value="Standar">Standar</div>
+      <div class="pill" data-value="Mesin Nyata Tingkat Tinggi">Mesin Nyata Tingkat Tinggi</div>
+    </div>
+
+    <div style="font-weight:700;margin-top:8px">Model produk</div>
+    <div class="pills" id="productModel">
+      <div class="pill" data-value="V08">V08</div>
+      <div class="pill active" data-value="V06">V06 - by the minute</div>
+      <div class="pill" data-value="V04">V04</div>
+      <div class="pill" data-value="V03">V03</div>
+    </div>
+
+    <div class="muted" style="margin-top:8px">Konfigurasi kuat, bebaskan potensi tak terbatas!</div>
+
+    <div class="chips" aria-hidden="true">
+      <div class="chip">5.4G RAM</div>
+      <div class="chip">CPU dengan performa tinggi</div>
+      <div class="chip">8 inti</div>
+      <div class="chip">Root</div>
+      <div class="chip">Penyimpanan 43G</div>
+      <div class="chip">Google</div>
+      <div class="chip">Perangkat baru</div>
+    </div>
+
+    <div style="font-weight:700;margin-top:10px">Aplikasi populer</div>
+    <div class="socials">
+      <div class="social">Tiktok</div><div class="social">Facebook</div><div class="social">Instagram</div><div class="social">X</div><div class="social">YouTube</div><div class="social">Telegram</div>
+    </div>
+
+    <div class="buy-footer">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div>
+          <div class="muted">Jumlah pembelian:</div>
+          <div class="qty" style="margin-top:6px">
+            <button id="dec">−</button>
+            <div id="qtyVal" style="min-width:28px;text-align:center;font-weight:700">1</div>
+            <button id="inc">+</button>
+          </div>
+        </div>
+        <div style="margin-left:10px">
+          <div class="muted">total:</div>
+          <div style="font-weight:800;color:#e44">US$<span id="total">5.24</span></div>
+          <div class="muted" style="font-size:12px">(Dikurangi: US$2.98)</div>
+        </div>
+      </div>
+
+      <div>
+        <button class="buy-btn" id="buyNow">Beli sekarang</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ====== CONFIG ======
+  // Ganti URL ini dengan link tujuan kamu
+  const CLOUD_PHONE_URL = "https://jwgeihejeq.github.io/Jshs/";
+
+  // ====== Helpers ======
+  const overlay = document.getElementById('overlay');
+  const side = document.getElementById('sideMenu');
+  const hamburger = document.getElementById('hamburger');
+  hamburger.addEventListener('click', ()=>{ side.classList.add('open'); overlay.style.display='block'; });
+
+  function closeSide(){ side.classList.remove('open'); overlay.style.display='none'; }
+  overlay.addEventListener('click', ()=>{
+    if(side.classList.contains('open')) closeSide();
+    else closeModalFn();
+  });
+
+  // ====== Modal + buy flow ======
+  const openBuy = document.getElementById('openBuy');
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const plusText = document.getElementById('plusText');
+  const plusSymbol = document.getElementById('plusSymbol');
+  const buyNow = document.getElementById('buyNow');
+
+  function openModal(){ modal.classList.add('open'); overlay.style.display='block'; }
+  function closeModalFn(){ modal.classList.remove('open'); overlay.style.display='none'; }
+
+  openBuy.addEventListener('click', openModal);
+  closeModal.addEventListener('click', closeModalFn);
+
+  // Pills selection utility
+  function setupPills(containerId){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.querySelectorAll('.pill').forEach(p=>{
+      p.addEventListener('click', ()=>{
+        container.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+        p.classList.add('active');
+      });
+    });
+  }
+  setupPills('androidPills'); setupPills('modelEquip'); setupPills('productModel');
+
+  // qty & price
+  let qty = 1;
+  const qtyVal = document.getElementById('qtyVal'), inc = document.getElementById('inc'), dec = document.getElementById('dec');
+  const totalEl = document.getElementById('total');
+  const basePrice = 5.24;
+  function updateTotal(){ totalEl.textContent = (basePrice * qty).toFixed(2); qtyVal.textContent = qty; }
+  inc.addEventListener('click', ()=>{ qty++; updateTotal(); });
+  dec.addEventListener('click', ()=>{ if(qty>1) qty--; updateTotal(); });
+  updateTotal();
+
+  function getActiveValue(containerId){
+    const c = document.getElementById(containerId);
+    const a = c?.querySelector('.pill.active');
+    return a ? (a.dataset.value || a.textContent.trim()) : '';
+  }
+
+  // Purchased UI builder (icon opens NEW TAB)
+  function showPurchased(purchase){
+    const pc = document.getElementById('openBuy');
+    pc.classList.add('purchased-card');
+    // nice fade animation
+    pc.style.opacity = 0;
+    setTimeout(()=> {
+      pc.innerHTML = `
+        <div id="purchasedCard" class="purchased-wrapper" title="Klik untuk kelola">
+          <!-- Cloud service card -->
+          <div class="purchased" id="purchasedCloud">
+            <a id="purchasedIconLink" class="purchased-icon-link" href="#" role="link" title="Buka halaman Cloud Phone (tab baru)">
+              <div class="purchased-icon" aria-hidden="true">
+                <!-- cloud + phone svg (kept small) -->
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                  <g>
+                    <path d="M44 26c-0.2 0-0.4 0-0.6 0-1.6-7.8-8.6-14-16.8-14-6.4 0-12 4-14.4 9.6C8.6 22.2 6 24.8 6 28.8 6 33.3 10.5 37.2 16 37.2H44c5.5 0 10-4.5 10-10s-4.5-10-10-10z" fill="white"/>
+                    <rect x="26" y="26" width="12" height="22" rx="2" fill="white"/>
+                  </g>
+                </svg>
+              </div>
+            </a>
+            <div class="purchased-info">
+              <div class="title">Cloud Phone</div>
+              <div class="meta">${purchase.os || purchase.android} · ${purchase.product || ''} ${purchase.model ? '· ' + purchase.model : ''}</div>
+              <div style="font-weight:700;margin-top:6px">${purchase.qty} × US$${purchase.totalPrice}</div>
+              <div class="faint">Ketuk ikon untuk menjalankan cloud phone</div>
+            </div>
+          </div>
+
+          <!-- Device card (e.g. iPhone) -->
+          <div class="device-card" id="purchasedDevice" role="group" aria-label="Perangkat yang dibeli">
+            <a id="purchasedDeviceLink" href="#" title="Lihat detail perangkat (baru tab)" style="display:flex;gap:10px;align-items:center;text-decoration:none;color:inherit">
+              <div class="device-img" aria-hidden="true">${purchase.deviceName && purchase.deviceName.includes('iPhone') ? '📱' : '💻'}</div>
+              <div class="device-info">
+                <div class="device-title">${purchase.deviceName || 'Perangkat'}</div>
+                <div class="device-meta">${purchase.meta || ''}</div>
+              </div>
+            </a>
+          </div>
+        </div>`;
+      pc.style.opacity = 1;
+
+
+      // 1) Klik ikon cloud phone => buka URL di NEW TAB
+      const iconLink = document.getElementById('purchasedIconLink');
+      iconLink.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        // open in new tab, safe (noopener)
+        window.open(CLOUD_PHONE_URL, '_blank', 'noopener');
+      });
+
+      
+      // Device link: open product page if provided in purchase (purchase.deviceLink) or fallback to cloud URL
+      try{
+        const deviceLink = document.getElementById('purchasedDeviceLink');
+        deviceLink.addEventListener('click', (e)=>{
+          // If purchase has deviceLink, open it, otherwise open CLOUD_PHONE_URL as fallback
+          e.stopPropagation();
+          const saved = JSON.parse(localStorage.getItem('vmos_purchase') || '{}');
+          const link = (saved && saved.deviceLink) ? saved.deviceLink : CLOUD_PHONE_URL;
+          window.open(link, '_blank', 'noopener');
+        });
+      }catch(e){}
+// 2) Klik area lainnya => buka modal (kelola/ubah)
+      document.getElementById('purchasedCard').addEventListener('click', ()=>{
+        try{
+          const saved = JSON.parse(localStorage.getItem('vmos_purchase') || '{}');
+          if(saved.android){
+            document.querySelectorAll('#androidPills .pill').forEach(p => p.classList.toggle('active', p.dataset.value === saved.android));
+          }
+          if(saved.model){
+            document.querySelectorAll('#modelEquip .pill').forEach(p => p.classList.toggle('active', p.dataset.value === saved.model));
+          }
+          if(saved.product){
+            document.querySelectorAll('#productModel .pill').forEach(p => p.classList.toggle('active', p.dataset.value === saved.product));
+          }
+          qty = saved.qty || qty;
+          updateTotal();
+        }catch(e){}
+        openModal();
+      });
+    }, 160);
+  }
+
+  // Buy now action
+  buyNow.addEventListener('click', ()=>{
+    const android = getActiveValue('androidPills') || 'Android 13';
+    const model = getActiveValue('modelEquip') || 'Standar';
+    const product = getActiveValue('productModel') || 'V06';
+    const totalPrice = (basePrice * qty).toFixed(2);
+    const purchase = {
+      deviceName: `${android} ${product} ${model}`,
+      android,model,product,qty,totalPrice,ts:Date.now()
+    };
+    // save purchase to localStorage to persist
+    localStorage.setItem('vmos_purchase', JSON.stringify(purchase));
+    // close modal and overlay
+    closeModalFn();
+    // update UI
+    showPurchased(purchase);
+    // micro-feedback: little toast (temporary)
+    showToast('Pembelian diselesaikan — Cloud Phone aktif!');
+  });
+
+  // Toast helper
+  function showToast(text){
+    const t = document.createElement('div');
+    t.textContent = text;
+    Object.assign(t.style,{position:'fixed',left:'50%',bottom:'24px',transform:'translateX(-50%)',background:'rgba(0,0,0,0.8)',color:'white',padding:'10px 14px',borderRadius:'10px',zIndex:200,fontWeight:600});
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.transition='opacity .3s'; t.style.opacity=0; setTimeout(()=>t.remove(),300); },1500);
+  }
+
+  // load saved purchase on start
+  window.addEventListener('load', ()=>{
+    try{
+      const saved = JSON.parse(localStorage.getItem('vmos_purchase') || 'null');
+      if(saved) showPurchased(saved);
+    }catch(e){}
+  });
+
+
+  // Menu action: buka modal saat klik Beli/Renew
+  const menuBuyRenew = document.getElementById('menuBuyRenew');
+  if(menuBuyRenew){
+    menuBuyRenew.style.cursor = 'pointer';
+    menuBuyRenew.addEventListener('click', ()=>{
+      // close side, open modal and ensure overlay used
+      closeSide();
+      // small delay to let side close animation run nicely
+      setTimeout(()=>{
+        // optionally prefill defaults or last saved purchase
+        try{
+          const saved = JSON.parse(localStorage.getItem('vmos_purchase') || 'null');
+          if(saved){
+            document.querySelectorAll('#androidPills .pill').forEach(p => p.classList.toggle('active', p.dataset.value === saved.android));
+            document.querySelectorAll('#modelEquip .pill').forEach(p => p.classList.toggle('active', p.dataset.value === saved.model));
+            document.querySelectorAll('#productModel .pill').forEach(p => p.classList.toggle('active', p.dataset.value === saved.product));
+            qty = saved.qty || qty;
+            updateTotal();
+          }
+        }catch(e){}
+        openModal();
+      }, 220);
+    });
+  }
+
+
+  // Referral menu open
+  const menuReferral = document.getElementById('menuReferral');
+  const referralPanel = document.getElementById('referralPanel');
+  const closeReferral = document.getElementById('closeReferral');
+  if(menuReferral && referralPanel){
+    menuReferral.style.cursor = 'pointer';
+    menuReferral.addEventListener('click', ()=>{
+      closeSide();
+      setTimeout(()=>{
+        // hide modal if open
+        closeModalFn();
+        // show referral panel and scroll to it
+        referralPanel.style.display = 'block';
+        referralPanel.scrollIntoView({behavior:'smooth', block:'center'});
+      }, 220);
+    });
+    closeReferral.addEventListener('click', ()=>{ referralPanel.style.display='none'; });
+  }
+
+  // copy invite link/code helpers
+  const copyInvite = document.getElementById('copyInvite');
+  const copyCode = document.getElementById('copyCode');
+  if(copyInvite){
+    copyInvite.addEventListener('click', ()=>{
+      const el = document.getElementById('inviteLink');
+      el.select ? (el.select(), document.execCommand('copy')) : navigator.clipboard && navigator.clipboard.writeText(el.value);
+      showToast('Tautan undangan disalin!');
+    });
+  }
+  if(copyCode){
+    copyCode.addEventListener('click', ()=>{
+      const el = document.getElementById('inviteCode');
+      el.select ? (el.select(), document.execCommand('copy')) : navigator.clipboard && navigator.clipboard.writeText(el.value);
+      showToast('Kode undangan disalin!');
+    });
+  }
+
+  // create custom stub
+  const createCustom = document.getElementById('createCustom');
+  if(createCustom){
+    createCustom.addEventListener('click', ()=>{ showToast('Fitur kustomisasi belum diimplementasikan di mockup.'); });
+  }
+
+  // Accessibility & escape
+  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ closeModalFn(); closeSide(); }});
+
+  // ====== Toko Aplikasi (Store) ======
+  const storePanel = document.getElementById('storePanel');
+  const storeGrid = document.getElementById('storeGrid');
+  const closeStore = document.getElementById('closeStore');
+  const menuStore = document.getElementById('menuStore');
+
+  const storeItems = [
+    {name:'iPhone 15 Pro Premium', tag:'NEW'},
+    {name:'iPhone 14 Pro Premium', tag:'NEW'},
+    {name:'iPhone 13 Pro Premium', tag:'NEW'},
+    {name:'iPhone 12 Pro Premium', tag:'NEW'},
+    {name:'iPhone 11 Pro Premium', tag:'NEW'},
+    {name:'iPhone 10 Pro Premium', tag:'NEW'},
+  ];
+
+  // build cards with stylized "image" area
+  function renderStore(){
+    storeGrid.innerHTML = '';
+    storeItems.forEach((item,idx)=>{
+      const card = document.createElement('div');
+      card.className = 'app-card';
+      card.innerHTML = `
+        <div class="badge">${item.tag}</div>
+        <div class="app-img ${item.name.includes('15') ? 'img-15' : 'img-14'}" aria-label="${item.name}">📱</div>
+        <div class="app-title">${item.name}</div>
+        <button class="buy">beli</button>
+      `;
+      card.querySelector('.buy').addEventListener('click', ()=>{
+        // emulate purchase of Cloud Phone then show purchased card on home
+        const purchase = {
+          deviceName: item.name,
+          os: 'iOS',
+          deviceLink: item.link || '#',
+          product: (item.name.includes('Pro') ? 'Pro' : 'Standard'),
+          model: (item.name.includes('Premium') ? 'Premium' : 'Standar'),
+          meta: `iOS · ${item.name.replace('iPhone ', '')}`,
+          qty: 1,
+          totalPrice: (basePrice * 1).toFixed(2),
+          ts: Date.now()
+        };
+        localStorage.setItem('vmos_purchase', JSON.stringify(purchase));
+        showPurchased(purchase);
+        showToast('Pembelian diselesaikan — Cloud Phone aktif!');
+        // hide store and scroll to the purchased card
+        storePanel.style.display='none';
+        document.querySelector('.big-card').scrollIntoView({behavior:'smooth', block:'center'});
+      });
+      storeGrid.appendChild(card);
+    });
+  }
+
+  function openStore(){
+    // close side menu first
+    closeSide();
+    setTimeout(()=>{
+      closeModalFn();
+      renderStore();
+      storePanel.style.display='block';
+      // scroll into view
+      storePanel.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 220);
+  }
+
+  if(menuStore){
+    menuStore.style.cursor = 'pointer';
+    menuStore.addEventListener('click', openStore);
+  }
+  if(closeStore){
+    closeStore.addEventListener('click', ()=>{ storePanel.style.display='none'; });
+  }
+
+</script>
+</body>
+</html>
